@@ -53,7 +53,7 @@ pipeline {
                         git config user.name jenkins
                         git tag -a "${TAG}" -m "Jenkins build ${env.BUILD_NUMBER}"
                         #git push https://${GITHUB_TOKEN}@${GIT_REPO_NAME} ${TAG}
-                        git push origin "${TAG}"
+                        git push --force origin "${TAG}"
                     """
                         }
                     }

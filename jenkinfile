@@ -67,7 +67,26 @@ pipeline {
                 
                         sh '''
                             #!/bin/bash
-                            SERVERS='192.168.3.29 192.168.3.119'
+                            SERVERS='192.168.3.29'
+
+                            for server in $SERVERS; do
+                                echo "Deploying to server: $server"
+                                ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_PATH} ${SSH_USER}@$server "docker pull ${IMAGE_NAME}:${TAG}"
+                                ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "docker stop ${DOCKER_NAME} || true"
+                                ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "docker rm ${DOCKER_NAME} || true"
+                                ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "docker run -d --name ${DOCKER_NAME} -p 8900:80 ${IMAGE_NAME}:${TAG}"
+                            done
+                        '''
+                        
+                     }
+                }
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy2', keyFileVariable: 'SSH_KEY_PATH')]) {
+                script {
+                    // Loop through each server and deploy the Docker container
+                
+                        sh '''
+                            #!/bin/bash
+                            SERVERS='192.168.3.119'
 
                             for server in $SERVERS; do
                                 echo "Deploying to server: $server"

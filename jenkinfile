@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                withCredentials([string(credentialsId: 'github-secret-token', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'Git-Token', variable: 'GITHUB_TOKEN')]) {
                 echo 'Cloning repository...'
                 sh """
                 #Xoa thu muc service neu ton tai
@@ -36,7 +36,7 @@ pipeline {
         }
         stage("Tag the version") {
              steps {
-                    withCredentials([string(credentialsId: 'github-secret-token', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'Git-Token', variable: 'GITHUB_TOKEN')]) {
                     dir('service') {
                     sh """
 

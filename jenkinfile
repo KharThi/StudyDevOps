@@ -10,8 +10,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                echo 'R0busta@2024' 
-                sh 'sudo -S docker build -t my-web-app .'
+                sh 'docker build -t my-web-app .'
             }
         }
         stage('Run Docker Container') {

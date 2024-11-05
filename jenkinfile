@@ -10,7 +10,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t my-web-app .'
+                sh 'docker build -t my-web-app ./'
             }
         }
         stage('Run Docker Container') {

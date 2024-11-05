@@ -59,6 +59,14 @@ pipeline {
                     }
                 }
         }
+        stage('Approval Required') {
+            steps {
+                script {
+                    // Pause the pipeline and wait for user input
+                    input message: "Do you want to proceed to the Deploy stage?", ok: "Proceed"
+                }
+            }
+        }
         stage('Deploy to Servers') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy', keyFileVariable: 'SSH_KEY_PATH')]) {

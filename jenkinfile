@@ -61,7 +61,17 @@ pipeline {
         }
         stage('Deploy to Servers') {
             steps {
-                sshagent(credentials: ['ssh-deploy']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy', keyFileVariable: 'SSH_KEY_PATH')]) {
+                    sh '''
+                        echo "SSH Key Path: ${SSH_KEY_PATH}"
+                        ls -l ${SSH_KEY_PATH} || echo "SSH key file not found!"
+                        cat ${SSH_KEY_PATH} || echo "Cannot display SSH key contents"
+                    '''
+                }
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy', keyFileVariable: 'SSH_KEY_PATH')]) {
+                script {
+                    // Loop through each server and deploy the Docker container
+                
                         sh '''
                             #!/bin/bash
                             server='192.168.3.29'
@@ -71,7 +81,9 @@ pipeline {
                                 ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "sudo docker rm ${DOCKER_NAME} || true"
                                 ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "sudo docker run -d --name ${DOCKER_NAME} -p 8900:80 ${IMAGE_NAME}:${TAG}"
                         '''
-                    }
+                        
+                     }
+                }
             }
          }
     }

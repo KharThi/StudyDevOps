@@ -1,11 +1,11 @@
 pipeline {
     agent any
     environment {
-        GIT_BRANCH = "master" // Nhanh git build
+        GIT_BRANCH = "main" // Nhanh git build
         GIT_REPO_NAME = "github.com/KharThi/StudyDevOps.git"
         TELEGRAM_BOT_TOKEN = credentials('telegram-token') // Telegram bot access token
         TELEGRAM_CHAT_ID = credentials('telegram-chat-id') // Telegram bot chat id
-        DOCKER_ENDPOINT = "kharthi" //Docker user Hub hoac Docker Private Resistry ENDPOINT
+        DOCKER_ENDPOINT = "nhontrnguyen" //Docker user Hub hoac Docker Private Resistry ENDPOINT
         DOCKER_NAME = "nginx-jenkins"
         VERSION = "1.0"
         TAG = "${VERSION}.${env.BUILD_NUMBER}"
@@ -34,6 +34,15 @@ pipeline {
                 }
             }
         }
+        //stage('Push Image to Docker Hub') {
+        //    steps {
+        //        echo 'Push Docker image...'
+        //        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+        //            sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+        //            sh 'docker push ${IMAGE_NAME}:${TAG}'
+         //   }
+        //}
+        //}
         stage("Tag the version") {
              steps {
                     withCredentials([string(credentialsId: 'Git-Token', variable: 'GITHUB_TOKEN')]) {
@@ -58,7 +67,7 @@ pipeline {
                 
                         sh '''
                             #!/bin/bash
-                            server='192.168.3.29'
+                            server='192.168.3.20'
                                 echo "Deploying to server: $server"
                                 ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_PATH} ${SSH_USER}@$server "sudo docker pull ${IMAGE_NAME}:${TAG}"
                                 ssh -i ${SSH_KEY_PATH} ${SSH_USER}@$server "sudo docker stop ${DOCKER_NAME} || true"

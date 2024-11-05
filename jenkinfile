@@ -34,7 +34,6 @@ pipeline {
                 }
             }
         }
-        }
         stage("Tag the version") {
              steps {
                     withCredentials([string(credentialsId: 'github-secret-token', variable: 'GITHUB_TOKEN')]) {

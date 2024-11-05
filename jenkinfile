@@ -63,9 +63,12 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy', keyFileVariable: 'SSH_KEY_PATH')]) {
                     sh '''
+                        echo "$SSH_KEY_CONTENT" > /tmp/ssh_key_inline
+                        chmod 600 /tmp/ssh_key_inline
                         echo "SSH Key Path: ${SSH_KEY_PATH}"
                         ls -l ${SSH_KEY_PATH} || echo "SSH key file not found!"
                         cat ${SSH_KEY_PATH} || echo "Cannot display SSH key contents"
+                        rm /tmp/ssh_key_inline
                     '''
                 }
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-deploy', keyFileVariable: 'SSH_KEY_PATH')]) {

@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GIT_BRANCH = "main" // Nhanh git build
+        GIT_BRANCH = "master" // Nhanh git build
         GIT_REPO_NAME = "github.com/KharThi/StudyDevOps.git"
         TELEGRAM_BOT_TOKEN = credentials('telegram-token') // Telegram bot access token
         TELEGRAM_CHAT_ID = credentials('telegram-chat-id') // Telegram bot chat id
@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                withCredentials([string(credentialsId: 'Git-Token', variable: 'GITHUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'github-secret-token', variable: 'GITHUB_TOKEN')]) {
                 echo 'Cloning repository...'
                 sh """
                 #Xoa thu muc service neu ton tai
@@ -40,12 +40,12 @@ pipeline {
         //        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
         //            sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
         //            sh 'docker push ${IMAGE_NAME}:${TAG}'
-         //   }
-        //}
-        //}
+        //    }
+       // }
+       // }
         stage("Tag the version") {
              steps {
-                    withCredentials([string(credentialsId: 'Git-Token', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'github-secret-token', variable: 'GITHUB_TOKEN')]) {
                     dir('service') {
                     sh """
 
